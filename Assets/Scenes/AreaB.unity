@@ -136,8 +136,8 @@ GameObject:
   - component: {fileID: 240424386}
   - component: {fileID: 240424385}
   - component: {fileID: 240424384}
-  m_Layer: 8
-  m_Name: PortalB
+  m_Layer: 0
+  m_Name: PortalC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,8 +185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54594a8fb6434e66830f7008b80f404, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MyPortalSO: {fileID: 11400000, guid: 1e89e6d5ba58f465eae3f149b6a54769, type: 2}
-  Location: {x: 0, y: 0}
+  MyPortalSO: {fileID: 11400000, guid: a9c1a840c55d046f7b682531b72b7e55, type: 2}
+  Location: {x: 6.48, y: -1.92}
 --- !u!483693784 &240424386
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -1262,12 +1262,12 @@ PrefabInstance:
     - target: {fileID: 6468004768796682398, guid: ae1396cd80d15443197ecbad49560fc3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 6.48
       objectReference: {fileID: 0}
     - target: {fileID: 6468004768796682398, guid: ae1396cd80d15443197ecbad49560fc3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1.92
       objectReference: {fileID: 0}
     - target: {fileID: 6468004768796682398, guid: ae1396cd80d15443197ecbad49560fc3,
         type: 3}

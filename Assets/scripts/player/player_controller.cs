@@ -55,12 +55,21 @@ public class player_controller : MonoBehaviour
     {
         //facingLeft = false;
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance, what_is_wall);
+        if (hitInfo && hitInfo.transform.GetComponent<Portal>())
+        {
+            PortalSO portal = hitInfo.transform.GetComponent<Portal>().MyPortalSO;
+            FindObjectOfType<Area>().OpenPortal(portal);
+        }
+
         if (!hitInfo)
         {
             transform.Translate(move_distance, 0, 0);
             while(true)
             {
                 RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
+
+                
+
                 if (!ground_info)
                 {
                     transform.Translate(0, -move_distance, 0);

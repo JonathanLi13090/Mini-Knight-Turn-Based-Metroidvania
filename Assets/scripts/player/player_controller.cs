@@ -8,14 +8,16 @@ public class player_controller : MonoBehaviour
     public GameObject turn_controller;
     public LayerMask what_is_wall;
     public LayerMask what_is_enemy;
-    public Transform right_attackPoint;
+    public Transform attackPoint;
     public Transform left_attackPoint;
     public Transform down_attackPoint;
     public float attackRange;
     public int attack_damage;
     public bool is_grounded;
     public float move_distance;
-    private bool facingLeft = false;
+    public bool facingLeft = false;
+
+    public bool MoveMade = false;
 
     // Start is called before the first frame update
     void Start()
@@ -28,34 +30,38 @@ public class player_controller : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            
             Attack();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Left();
+            
+            MoveMade = Left();
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Right();
+            
+            MoveMade = Right();
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Jump();
+            
+            MoveMade = Jump();
         }
-        if(facingLeft == true && Input.GetKey(KeyCode.LeftArrow))
+        if(facingLeft == false && Input.GetKeyDown(KeyCode.LeftArrow))
         {
             Flip();
         }
-        else if(facingLeft == false && Input.GetKey(KeyCode.RightArrow))
+        else if(facingLeft == true && Input.GetKeyDown(KeyCode.RightArrow))
         {
             Flip();
         }
     }
 
-    void Right()
+    bool Right()
     {
-        turn_controller.GetComponent<turn_controller>().move_for_turn();
-       
+        //turn_controller.GetComponent<turn_controller>().move_for_turn();
+        bool moved = false;
         RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance);
         if (portalInfo)
         {
@@ -69,6 +75,7 @@ public class player_controller : MonoBehaviour
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance, what_is_wall);
         if (!hitInfo)
         {
+            moved = true;
             transform.Translate(move_distance, 0, 0);
             while(true)
             {
@@ -90,12 +97,13 @@ public class player_controller : MonoBehaviour
                 }
             }
         }
+        return moved;
     }
 
-    void Left()
+    bool Left()
     {
-        turn_controller.GetComponent<turn_controller>().move_for_turn();
-
+        //turn_controller.GetComponent<turn_controller>().move_for_turn();
+        bool moved = false;
         RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance);
         if (portalInfo)
         {
@@ -108,6 +116,7 @@ public class player_controller : MonoBehaviour
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance, what_is_wall);
         if (!hitInfo)
         {
+            moved = true;
             transform.Translate(-move_distance, 0, 0);
             while (true)
             {
@@ -129,11 +138,13 @@ public class player_controller : MonoBehaviour
                 }
             }
         }
+        return moved;
 
     }
 
-    void Jump()
+    bool Jump()
     {
+        bool moved = false;
         RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.up, wall_check_distance);
         if (portalInfo)
         {
@@ -150,34 +161,41 @@ public class player_controller : MonoBehaviour
             if (!hitInfo)
             {
                 transform.Translate(0, move_distance, 0);
+                moved = true;
             }
-        }  
+        }
+        return moved;
     }
 
     void Attack()
     {
-        if(facingLeft == false)
+        int kickDir;
+
+        if (facingLeft == false) kickDir = 1;
+        else kickDir = 2;
+
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, what_is_enemy);
+        if (hitEnemies.Length > 0)
         {
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(right_attackPoint.position, attackRange, what_is_enemy);
-            if(hitEnemies.Length > 0)
+            
+            foreach (Collider2D enemy in hitEnemies)
             {
-                foreach (Collider2D enemy in hitEnemies)
-                {
-                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 1);
-                }
+                Debug.Log("Enemy Hit");
+                enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDir);
             }
         }
-        else if(facingLeft == true)
-        {
-            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(left_attackPoint.position, attackRange, what_is_enemy);
-            if (hitEnemies.Length > 0)
-            {
-                foreach (Collider2D enemy in hitEnemies)
-                {
-                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 2);
-                }
-            }
-        }
+        //else if(facingLeft == true)
+        //{
+        //    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(left_attackPoint.position, attackRange, what_is_enemy);
+        //    if (hitEnemies.Length > 0)
+        //    {
+        //        foreach (Collider2D enemy in hitEnemies)
+        //        {
+        //            Debug.Log("Enemy Hit");
+        //            enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 2);
+        //        }
+        //    }
+        //}
     }
 
     void Flip()

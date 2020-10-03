@@ -18,14 +18,16 @@ public class enemy_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (going_right == false && Input.GetKey(KeyCode.LeftArrow))
-        {
-            Flip();
-        }
-        else if (going_right == true && Input.GetKey(KeyCode.RightArrow))
-        {
-            Flip();
-        }
+        //if (going_right == false && Input.GetKey(KeyCode.LeftArrow))
+        //{
+        //    Flip();
+        //}
+        //else if (going_right == true && Input.GetKey(KeyCode.RightArrow))
+        //{
+        //    Flip();
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.LeftArrow)) move();
     }
 
     public void move()
@@ -35,7 +37,8 @@ public class enemy_controller : MonoBehaviour
             RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance, what_is_wall);
             if (!hitInfo)
             {
-                transform.Translate(move_distance, 0, 0);
+                transform.position += Vector3.right * move_distance;
+                //transform.Translate(move_distance, 0, 0);
                 Debug.Log("right");
             }
             else
@@ -49,8 +52,9 @@ public class enemy_controller : MonoBehaviour
             RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance, what_is_wall);
             if (!hitInfo)
             {
-                transform.Translate(-move_distance, 0, 0);
-                Debug.Log("left");
+                transform.position += Vector3.left * move_distance;
+                //transform.Translate(-move_distance, 0, 0);
+                Debug.Log("left" + transform.position);
             }
             else
             {

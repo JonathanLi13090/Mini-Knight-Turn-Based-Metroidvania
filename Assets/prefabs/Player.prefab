@@ -109,6 +109,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -165,10 +166,12 @@ MonoBehaviour:
   what_is_enemy:
     serializedVersion: 2
     m_Bits: 512
-  right_attackPoint: {fileID: 3495237956823175045}
+  right_attackPoint: {fileID: 4503923638330936299}
   left_attackPoint: {fileID: 4503923638330936299}
   down_attackPoint: {fileID: 0}
   attackRange: 0.5
   attack_damage: 1
   is_grounded: 0
   move_distance: 1
+  facingLeft: 1
+  MoveMade: 0

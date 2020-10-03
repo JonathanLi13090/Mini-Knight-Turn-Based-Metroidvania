@@ -5,6 +5,7 @@ using UnityEngine;
 public class turn_controller : MonoBehaviour
 {
     public GameObject[] moveable_stuff;
+    public player_controller player;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +15,12 @@ public class turn_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (!player) player = FindObjectOfType<player_controller>();
+        else if(player.MoveMade)
+        {
+            move_for_turn();
+            player.MoveMade = false;
+        }
     }
 
     public void move_for_turn()

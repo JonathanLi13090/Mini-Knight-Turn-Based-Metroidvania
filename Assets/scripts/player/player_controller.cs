@@ -5,6 +5,7 @@ using UnityEngine;
 public class player_controller : MonoBehaviour
 {
     public float wall_check_distance;
+    public GameObject turn_controller;
     public LayerMask what_is_wall;
     public LayerMask what_is_enemy;
     public Transform right_attackPoint;
@@ -27,7 +28,7 @@ public class player_controller : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-
+            Attack();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
@@ -53,7 +54,18 @@ public class player_controller : MonoBehaviour
 
     void Right()
     {
-        //facingLeft = false;
+        turn_controller.GetComponent<turn_controller>().move_for_turn();
+       
+        RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance);
+        if (portalInfo)
+        {
+            if (portalInfo.transform.GetComponent<Portal>())
+            {
+                PortalSO portal = portalInfo.transform.GetComponent<Portal>().MyPortalSO;
+                FindObjectOfType<Area>().OpenPortal(portal);
+            }
+        }
+        
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance, what_is_wall);
         if (!hitInfo)
         {
@@ -61,9 +73,16 @@ public class player_controller : MonoBehaviour
             while(true)
             {
                 RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
+                RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance);
                 if (!ground_info)
                 {
                     transform.Translate(0, -move_distance, 0);
+                    if (down_portal_info)
+                    {
+                        PortalSO portal1 = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
+                        FindObjectOfType<Area>().OpenPortal(portal1);
+                        break;
+                    }
                 }
                 else
                 {
@@ -75,7 +94,17 @@ public class player_controller : MonoBehaviour
 
     void Left()
     {
-        //facingLeft = true;
+        turn_controller.GetComponent<turn_controller>().move_for_turn();
+
+        RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance);
+        if (portalInfo)
+        {
+            if (portalInfo.transform.GetComponent<Portal>())
+            {
+                PortalSO portal = portalInfo.transform.GetComponent<Portal>().MyPortalSO;
+                FindObjectOfType<Area>().OpenPortal(portal);
+            }
+        }
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance, what_is_wall);
         if (!hitInfo)
         {
@@ -83,9 +112,16 @@ public class player_controller : MonoBehaviour
             while (true)
             {
                 RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
+                RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance);
                 if (!ground_info)
                 {
                     transform.Translate(0, -move_distance, 0);
+                    if (down_portal_info)
+                    {
+                        PortalSO portal = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
+                        FindObjectOfType<Area>().OpenPortal(portal);
+                        break;
+                    }
                 }
                 else
                 {
@@ -98,6 +134,15 @@ public class player_controller : MonoBehaviour
 
     void Jump()
     {
+        RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.up, wall_check_distance);
+        if (portalInfo)
+        {
+            if (portalInfo.transform.GetComponent<Portal>())
+            {
+                PortalSO portal = portalInfo.transform.GetComponent<Portal>().MyPortalSO;
+                FindObjectOfType<Area>().OpenPortal(portal);
+            }
+        }
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.up, wall_check_distance, what_is_wall);
         RaycastHit2D groundInfo = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
         if (groundInfo)
@@ -111,7 +156,28 @@ public class player_controller : MonoBehaviour
 
     void Attack()
     {
-
+        if(facingLeft == false)
+        {
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(right_attackPoint.position, attackRange, what_is_enemy);
+            if(hitEnemies.Length > 0)
+            {
+                foreach (Collider2D enemy in hitEnemies)
+                {
+                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 1);
+                }
+            }
+        }
+        else if(facingLeft == true)
+        {
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(left_attackPoint.position, attackRange, what_is_enemy);
+            if (hitEnemies.Length > 0)
+            {
+                foreach (Collider2D enemy in hitEnemies)
+                {
+                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 2);
+                }
+            }
+        }
     }
 
     void Flip()

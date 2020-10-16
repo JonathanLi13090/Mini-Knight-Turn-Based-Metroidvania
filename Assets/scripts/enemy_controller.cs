@@ -30,10 +30,9 @@ public class enemy_controller : MonoBehaviour
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attack_point.position, attack_range, what_is_player);
         if(hitPlayer.Length > 0)
         {
-            foreach (Collider2D player in hitPlayer)
-            {
-                player.GetComponent<Player_health>().take_damage(attack_damage);
-            }
+            Debug.Log("Attack Player");
+            hitPlayer[0].GetComponent<Player_health>().take_damage(attack_damage);
+            
         }
         if (going_right == true)
         {
@@ -42,12 +41,12 @@ public class enemy_controller : MonoBehaviour
             {
                 //transform.position += Vector3.left * move_distance;
                 transform.Translate(move_distance, 0, 0);
-                Debug.Log("right");
+                //Debug.Log("right");
             }
             else
             {
-                Debug.Log("hit wall");
-                going_right =! going_right; 
+                // Debug.Log("hit wall");
+                Flip();
             }
         }
         else if(going_right == false)
@@ -56,11 +55,11 @@ public class enemy_controller : MonoBehaviour
             if (!hitInfo)
             {
                 transform.Translate(-move_distance, 0, 0);
-                Debug.Log("left");
+//                Debug.Log("left");
             }
             else
             {
-                going_right = !going_right;
+                Flip();
             }
         }
     }

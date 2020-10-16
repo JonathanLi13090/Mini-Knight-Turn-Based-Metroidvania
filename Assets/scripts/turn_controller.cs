@@ -25,7 +25,7 @@ public class turn_controller : MonoBehaviour
 
     public void move_for_turn()
     {
-        Debug.Log("turn Controller");
+        //Debug.Log("turn Controller");
         foreach(GameObject game_objects in moveable_stuff)
         {
             game_objects.GetComponent<enemy_controller>().move(); 

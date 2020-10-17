@@ -46,8 +46,7 @@ public class enemy_controller : MonoBehaviour
             }
             else
             {
-                Debug.Log("hit wall");
-                going_right =! going_right; 
+                Flip();
             }
         }
         else if(going_right == false)
@@ -60,7 +59,7 @@ public class enemy_controller : MonoBehaviour
             }
             else
             {
-                going_right = !going_right;
+                Flip();
             }
         }
     }

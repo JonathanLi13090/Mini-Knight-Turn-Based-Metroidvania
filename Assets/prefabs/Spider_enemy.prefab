@@ -102,7 +102,13 @@ MonoBehaviour:
   what_is_wall:
     serializedVersion: 2
     m_Bits: 256
+  what_is_player:
+    serializedVersion: 2
+    m_Bits: 0
+  attack_range: 0.5
   going_right: 1
+  attack_point: {fileID: 4918339693078821130}
+  attack_damage: 1
 --- !u!114 &3455536297551519186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,7 +138,7 @@ BoxCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Player_health : MonoBehaviour
 {
-    public int max_health;
-    private int current_health;
+    //public int max_health = 1;
+    //private int current_health;
 
     // Start is called before the first frame update
     void Start()
     {
-        current_health = max_health;
-        setPlayerHealthText();
+        //current_health = max_health;
+        
     }
 
     // Update is called once per frame
@@ -21,25 +21,15 @@ public class Player_health : MonoBehaviour
 
     public void take_damage(int damage)
     {
-        if(current_health > 0)
-        {
-            current_health -= damage;
-            setPlayerHealthText();
-        }
-        else
-        {
-            Die();
-        }
+        Die();
 
     }
 
     public void Die()
     {
         Debug.Log("player died");
+        FindObjectOfType<Area>().RespawnPlayer();
     }
 
-    private void setPlayerHealthText()
-    {
-        FindObjectOfType<UIhandler>().SetPlayerHealth(current_health);
-    }
+    
 }

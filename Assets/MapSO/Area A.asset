@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 114351a2f0936dc4faa6b29b9c8f0847, type: 3}
   m_Name: Area A
   m_EditorClassIdentifier: 
-  SceneName: Area_A
+  SceneName: planes_01

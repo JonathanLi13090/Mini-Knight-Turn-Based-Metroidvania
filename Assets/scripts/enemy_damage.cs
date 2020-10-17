@@ -9,10 +9,16 @@ public class enemy_damage : MonoBehaviour
     public int knockback_distance = 1;
     public float wall_check_distance = 1f;
     public LayerMask what_is_wall;
+    public bool isDead
+    {
+        get { return current_health <= 0; }
+        set { current_health = value ? max_health : 0;  }
+    }
 
     void Start()
     {
-        current_health = max_health;
+        //current_health = max_health;
+        isDead = true;
     }
 
     public void TakeDamage(int damage, int direction)
@@ -45,9 +51,11 @@ public class enemy_damage : MonoBehaviour
             }
         }
     }
+    
 
     void Die()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

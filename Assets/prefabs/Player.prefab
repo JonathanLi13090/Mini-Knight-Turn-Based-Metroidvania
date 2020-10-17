@@ -143,6 +143,9 @@ MonoBehaviour:
   what_is_ladder:
     serializedVersion: 2
     m_Bits: 2048
+  what_is_checkpoint:
+    serializedVersion: 2
+    m_Bits: 8192
   attackPoint: {fileID: 3495237956823175045}
   down_attackPoint: {fileID: 0}
   attackRange: 0.5
@@ -162,7 +165,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4fe584ecd70f2f4eb437867ff065b33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_health: 3
 --- !u!61 &4926559376813699600
 BoxCollider2D:
   m_ObjectHideFlags: 0

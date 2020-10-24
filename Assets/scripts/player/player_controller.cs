@@ -70,6 +70,7 @@ public class player_controller : MonoBehaviour
         float move_direction = moving_right ? move_distance : -move_distance;
 
         RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, move_direction_vector, wall_check_distance, what_is_portals);
+
         if (portalInfo)
         {
             if (portalInfo.transform.GetComponent<Portal>())
@@ -118,96 +119,17 @@ public class player_controller : MonoBehaviour
 
     public void checkForCheckpoint(Vector2 move_direction)
     {
-        RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, move_direction, move_distance, what_is_checkpoint);
+        //RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, move_direction, move_distance, what_is_checkpoint);
+        bool hitInfo = UtilityTilemap.CheckTileType("Portal", transform.position + new Vector3(move_distance, 0, 0), "checkpoint_1");
         if (hitInfo)
         {
             Debug.Log("checkpoint function");
-            FindObjectOfType<Area>().SetCheckpoint(hitInfo.transform);   
+            //FindObjectOfType<Area>().SetCheckpoint(hitInfo.transform);  
+            FindObjectOfType<Area>().SetCheckpoint(transform.position + new Vector3(move_distance, 0, 0));
         }
     }
 
-    //bool Right()
-    //{
-    //    //turn_controller.GetComponent<turn_controller>().move_for_turn();
-    //    bool moved = false;
-    //    RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance, what_is_portals);
-    //    if (portalInfo)
-    //    {
-    //        if (portalInfo.transform.GetComponent<Portal>())
-    //        {
-    //            PortalSO portal = portalInfo.transform.GetComponent<Portal>().MyPortalSO;
-    //            FindObjectOfType<Area>().OpenPortal(portal);
-    //        }
-    //    }
-        
-    //    RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance, what_is_wall);
-    //    if (!hitInfo)
-    //    {
-    //        moved = true;
-    //        transform.Translate(move_distance, 0, 0);
-    //        while(true)
-    //        {
-    //            RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
-    //            RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
-    //            if (!ground_info)
-    //            {
-    //                transform.Translate(0, -move_distance, 0);
-    //                if (down_portal_info)
-    //                {
-    //                    PortalSO portal1 = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
-    //                    FindObjectOfType<Area>().OpenPortal(portal1);
-    //                    break;
-    //                }
-    //            }
-    //            else
-    //            {
-    //                break;
-    //            }
-    //        }
-    //    }
-    //    return moved;
-    //}
-
-    //bool Left()
-    //{
-    //    bool moved = false;
-
-    //    RaycastHit2D portalInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance, what_is_portals);
-    //    if (portalInfo)
-    //    {
-    //        if (portalInfo.transform.GetComponent<Portal>())
-    //        {
-    //            PortalSO portal = portalInfo.transform.GetComponent<Portal>().MyPortalSO;
-    //            FindObjectOfType<Area>().OpenPortal(portal);
-    //        }
-    //    }
-    //    RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance, what_is_wall);
-    //    if (!hitInfo)
-    //    {
-    //        moved = true;
-    //        transform.Translate(-move_distance, 0, 0);
-    //        while (true)
-    //        {
-    //            RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
-    //            RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
-    //            if (!ground_info)
-    //            {
-    //                transform.Translate(0, -move_distance, 0);
-    //                if (down_portal_info)
-    //                {
-    //                    PortalSO portal = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
-    //                    FindObjectOfType<Area>().OpenPortal(portal);
-    //                    break;
-    //                }
-    //            }
-    //            else
-    //            {
-    //                break;
-    //            }
-    //        }
-    //    }
-    //    return moved;
-    //}
+    
 
     bool Jump()
     {

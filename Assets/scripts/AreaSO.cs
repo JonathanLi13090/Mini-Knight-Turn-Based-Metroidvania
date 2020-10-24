@@ -7,4 +7,5 @@ public class AreaSO : ScriptableObject
 {
     public string SceneName;
 
+    
 }

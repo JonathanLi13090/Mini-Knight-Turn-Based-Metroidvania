@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: big_tileset 1_13
+  m_Name: portal_door_01
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 2536513042742714625, guid: bad819a26de8a5c40bcc8e35ca6a0cf1,
     type: 3}

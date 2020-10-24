@@ -8,9 +8,14 @@ public class Area : MonoBehaviour
     public static PortalSO TargetPortal;
     public GameObject PlayerPrefab;
     public Transform DefaultSpawnPoint;
+    private Vector2 current_checkpoint;
+    private GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
+        current_checkpoint = DefaultSpawnPoint.position;
+
         if (TargetPortal)
         {
             Portal[] portals = FindObjectsOfType<Portal>();
@@ -18,13 +23,15 @@ public class Area : MonoBehaviour
             {
                 if(portal.MyPortalSO = TargetPortal)
                 {
-                    Instantiate(PlayerPrefab, portal.Location, Quaternion.identity);
+                    player = Instantiate(PlayerPrefab, portal.Location, Quaternion.identity);
+                    current_checkpoint = DefaultSpawnPoint.position;
                 }
             }
         }
         else
         {
-            Instantiate(PlayerPrefab, DefaultSpawnPoint.position, Quaternion.identity);
+            player = Instantiate(PlayerPrefab, DefaultSpawnPoint.position, Quaternion.identity);
+            current_checkpoint = DefaultSpawnPoint.position;
         }
     }
 
@@ -41,5 +48,16 @@ public class Area : MonoBehaviour
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(TargetPortal.MyArea.SceneName);
         }
+    }
+
+    public void SetCheckpoint(Transform checkpoint)
+    {
+        current_checkpoint = checkpoint.position;
+        Debug.Log("checkpoint set" + checkpoint.position);
+    }
+
+    public void RespawnPlayer()
+    {
+        player.transform.position = current_checkpoint;
     }
 }

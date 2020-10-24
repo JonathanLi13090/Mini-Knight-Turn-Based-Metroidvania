@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24cfeac9af6c5da4e822f14b845a5e04, type: 3}
   m_Name: PortalC
   m_EditorClassIdentifier: 
-  MyArea: {fileID: 11400000, guid: 3fc6305d1faa55b4d9269f77ce2eef27, type: 2}
+  MyArea: {fileID: 11400000, guid: 72a9b642dab29864c95d6c7a491c941a, type: 2}

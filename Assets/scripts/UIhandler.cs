@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 public class UIhandler : MonoBehaviour
 {
-    public Text PlayerHealthText;
+    public Text player_lifes_text;
 
-    public void SetPlayerHealth(int playerHealth)
+    public void SetPlayerHealth(int player_lives)
     {
-        PlayerHealthText.text = playerHealth.ToString();
+       player_lifes_text.text = player_lives.ToString();
     }
 }

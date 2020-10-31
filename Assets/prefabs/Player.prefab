@@ -44,13 +44,14 @@ GameObject:
   - component: {fileID: 986207101617225131}
   - component: {fileID: 4926559376813699600}
   - component: {fileID: 8136467860635207571}
+  - component: {fileID: 484934119}
   m_Layer: 12
   m_Name: Player
   m_TagString: player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8778468296454887155
 Transform:
   m_ObjectHideFlags: 0
@@ -129,6 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wall_check_distance: 1
+  animator: {fileID: 484934119}
   turn_controller: {fileID: 6002389705066841657, guid: 7b8a192adc7c08741b2cf02a6af1dbbb,
     type: 3}
   what_is_portals:
@@ -216,3 +218,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &484934119
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8778468296454887158}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b58ffd41b82663e45b63192bfd4ea8d6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

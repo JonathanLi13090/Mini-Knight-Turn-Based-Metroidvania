@@ -52,8 +52,13 @@ public class Area : MonoBehaviour
 
     public void SetCheckpoint(Transform checkpoint)
     {
-        current_checkpoint = checkpoint.position;
-        Debug.Log("checkpoint set" + checkpoint.position);
+       SetCheckpoint(checkpoint.position);
+    }
+
+    public void SetCheckpoint(Vector3 checkpointPos)
+    {
+        current_checkpoint = checkpointPos;
+        Debug.Log("checkpoint set" + checkpointPos);
     }
 
     public void RespawnPlayer()

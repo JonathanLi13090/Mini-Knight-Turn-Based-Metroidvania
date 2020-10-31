@@ -15,6 +15,7 @@ public class turn_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
+        moveable_stuff = GameObject.FindGameObjectsWithTag("Enemy");
         if (!player) player = FindObjectOfType<player_controller>();
         if (player.MoveMade)
         {

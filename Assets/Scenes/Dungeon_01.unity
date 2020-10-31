@@ -590,7 +590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &768171834
 Transform:
   m_ObjectHideFlags: 0
@@ -871,6 +871,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 3267660493835217255, guid: 80e277c4e156fc840a84fb53c3c29e50,
+        type: 3}
+      propertyPath: m_TagString
+      value: UI_HANDLER
+      objectReference: {fileID: 0}
+    - target: {fileID: 7577580163824376489, guid: 80e277c4e156fc840a84fb53c3c29e50,
+        type: 3}
+      propertyPath: player_lifes_text
+      value: 
+      objectReference: {fileID: 1845131360}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80e277c4e156fc840a84fb53c3c29e50, type: 3}
 --- !u!224 &785034652 stripped
@@ -5575,6 +5585,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b8a192adc7c08741b2cf02a6af1dbbb, type: 3}
+--- !u!114 &1845131360 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3267660493905259800, guid: 80e277c4e156fc840a84fb53c3c29e50,
+    type: 3}
+  m_PrefabInstance: {fileID: 785034651}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2240100212171691540
 PrefabInstance:
   m_ObjectHideFlags: 0

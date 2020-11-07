@@ -51,7 +51,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8778468296454887155
 Transform:
   m_ObjectHideFlags: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
     m_Bits: 1024
   what_is_wall:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 16640
   what_is_enemy:
     serializedVersion: 2
     m_Bits: 512
@@ -154,6 +154,7 @@ MonoBehaviour:
   attack_damage: 1
   is_grounded: 0
   move_distance: 1
+  attacked: 0
   MoveMade: 0
 --- !u!114 &986207101617225131
 MonoBehaviour:

@@ -30,6 +30,7 @@ public class Player_health : MonoBehaviour
 
     public void Die()
     {
+        FindObjectOfType<AudioHandler>().PlaySound("Player", "player_hurt");
         Debug.Log("player died");
         current_lives -= 1;
         if(current_lives > 0)

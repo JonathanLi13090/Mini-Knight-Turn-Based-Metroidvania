@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class turn_controller : MonoBehaviour
 {
-    public GameObject[] moveable_stuff;
+    public GameObject[] platforms;
+    public GameObject[] moveable_enemies;
     public player_controller player;
     // Start is called before the first frame update
     void Start()
@@ -15,7 +16,8 @@ public class turn_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        moveable_stuff = GameObject.FindGameObjectsWithTag("Enemy");
+        moveable_enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        platforms = GameObject.FindGameObjectsWithTag("moving_platform");
         if (!player) player = FindObjectOfType<player_controller>();
         if (player.MoveMade)
         {
@@ -26,10 +28,13 @@ public class turn_controller : MonoBehaviour
 
     public void move_for_turn()
     {
-        Debug.Log("turn Controller");
-        foreach(GameObject game_objects in moveable_stuff)
+        foreach(GameObject game_objects in moveable_enemies)
         {
             game_objects.GetComponent<enemy_controller>().move(); 
+        }
+        foreach (GameObject game_objects in platforms)
+        {
+            game_objects.GetComponent<MovingPlatform>().move();
         }
     }
 }

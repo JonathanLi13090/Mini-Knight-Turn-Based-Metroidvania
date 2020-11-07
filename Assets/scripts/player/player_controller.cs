@@ -19,8 +19,10 @@ public class player_controller : MonoBehaviour
     public bool is_grounded;
     public float move_distance;
     private bool facingLeft = true;
+    public bool attacked;
 
     public bool MoveMade = false;
+    bool onLadder = false;
 
     // Start is called before the first frame update
     void Start()
@@ -31,39 +33,105 @@ public class player_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        HandleInputs();
+
+        if (Input.GetKeyDown(KeyCode.Space) && !onLadder)
         {
             Attack();
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if(AttackButton && onLadder && (LeftArrowDown || RightArrowDown))
         {
-            MoveMade =HorizontalMovement(false);
+            if (LeftArrowDown && !facingLeft || RightArrowDown && facingLeft) Flip();
+            Attack();
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (!AttackButton)
         {
-            MoveMade = HorizontalMovement(true);
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                MoveMade = HorizontalMovement(false);
+            }
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                MoveMade = HorizontalMovement(true);
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                MoveMade = Jump();
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                MoveMade = Down();
+            }
+            if (facingLeft == false && Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                Flip();
+            }
+            else if (facingLeft == true && Input.GetKey(KeyCode.RightArrow))
+            {
+                Flip();
+            }
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+    }
+
+    bool LeftArrow;
+    bool LeftArrowDown;
+    bool LeftArrowUp;
+    bool RightArrow;
+    bool RightArrowDown;
+    bool RightArrowUp;
+    bool JumpButton;
+    bool JumpButtonUp;
+    bool JumpButtonDown;
+    bool AttackButton;
+    bool AttackButtonUp;
+    bool AttackButtonDown;
+
+    void HandleInputs()
+    {
+        //if (Input.GetKey(KeyCode.LeftArrow))
+        //{
+        //    if (!LeftArrow) LeftArrowDown = true;
+        //    else LeftArrowDown = false;
+        //    LeftArrow = true;
+        //    LeftArrowUp = false;
+        //}
+        //else
+        //{
+        //    if (LeftArrow) LeftArrowUp = true;
+        //    else LeftArrowUp = false;
+        //    LeftArrow = false;
+        //    LeftArrowDown = false;
+        //}
+        HandleInput(Input.GetKey(KeyCode.LeftArrow), ref LeftArrow, ref LeftArrowUp, ref LeftArrowDown);
+        HandleInput(Input.GetKey(KeyCode.RightArrow), ref RightArrow, ref RightArrowUp, ref RightArrowDown);
+        HandleInput(Input.GetKey(KeyCode.UpArrow), ref JumpButton, ref JumpButtonUp, ref JumpButtonDown);
+        HandleInput(Input.GetKey(KeyCode.Space) || Input.GetAxisRaw("Jump") > 0.1f, ref AttackButton, ref AttackButtonUp, ref AttackButtonDown);
+    }
+
+    void HandleInput(bool input, ref bool button, ref bool up, ref bool down)
+    {
+        if (input)
         {
-            MoveMade = Jump();
+            if (!button) down = true;
+            else down = false;
+            button = true;
+            up = false;
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        else
         {
-            MoveMade = Down();
-        }
-        if (facingLeft == false && Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Flip();
-        }
-        else if(facingLeft == true && Input.GetKey(KeyCode.RightArrow))
-        {
-            Flip();
+            if (button) up = true;
+            else up = false;
+            button = false;
+            down = false;
         }
     }
 
     bool HorizontalMovement(bool moving_right)
     {
+        attacked = false;
         animator.SetBool("is walk", true);
+        animator.SetBool("is attacking", false);
+        animator.SetBool("is climbing", false);
         bool moved = false;
         Vector2 move_direction_vector = moving_right ? Vector2.right : Vector2.left;
         float move_direction = moving_right ? move_distance : -move_distance;
@@ -81,14 +149,16 @@ public class player_controller : MonoBehaviour
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, move_direction_vector, wall_check_distance, what_is_wall);
         if (!hitInfo)
         {
+            FindObjectOfType<AudioHandler>().PlaySound("Player", "walk");
             moved = true;
+            onLadder = false;
             checkForCheckpoint(move_direction_vector);
             transform.Translate(move_direction, 0, 0);
             int fallen_distance = 0;
             while (fallen_distance < 20)
             {
                 fallen_distance += 1;   
-                RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
+                RaycastHit2D ground_info = Physics2D.Raycast(transform.position , Vector2.down, wall_check_distance, what_is_wall);
                 RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
                 if (!ground_info)
                 {
@@ -148,7 +218,10 @@ public class player_controller : MonoBehaviour
         {
             if (!hitInfo)
             {
+                FindObjectOfType<AudioHandler>().PlaySound("Player", "ladder");
+                onLadder = true;
                 animator.SetBool("is climbing", true);
+                animator.SetBool("is attacking", false);
                 moved = true;
                 transform.Translate(0, move_distance, 0);
             }
@@ -160,6 +233,8 @@ public class player_controller : MonoBehaviour
             {
                 if (!hitInfo)
                 {
+                    FindObjectOfType<AudioHandler>().PlaySound("Player", "player_jump");
+                    onLadder = false;
                     moved = true;
                     transform.Translate(0, move_distance, 0);
                 }
@@ -177,29 +252,39 @@ public class player_controller : MonoBehaviour
         {
             if (hitInfo)
             {
+                onLadder = true;
                 moved = true;
                 checkForCheckpoint(Vector2.down);
                 transform.Translate(0, -move_distance, 0);
             }
+        }
+        else
+        {
+            onLadder = false;
         }
         return moved;
     }
 
     void Attack()
     {
-        animator.SetBool("is attacking", true);
-        int kickDirection;
-        if (facingLeft == false) kickDirection = 1;
-        else kickDirection = 2;
-
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, what_is_enemy);
-        if(hitEnemies.Length > 0)
+        if(attacked == false)
         {
-            foreach (Collider2D enemy in hitEnemies)
+            animator.SetBool("is attacking", true);
+            int kickDirection;
+            if (facingLeft == false) kickDirection = 1;
+            else kickDirection = 2;
+
+            Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, what_is_enemy);
+            if (hitEnemies.Length > 0)
             {
-                Debug.Log("enemy hit");
-                enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);
+                foreach (Collider2D enemy in hitEnemies)
+                {
+                    FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
+                    Debug.Log("enemy hit");
+                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);
+                }
             }
+            attacked = true;
         }
     }
 

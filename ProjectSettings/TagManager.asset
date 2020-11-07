@@ -8,6 +8,7 @@ TagManager:
   - UI_HANDLER
   - Portal
   - Enemy
+  - moving_platform
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - ladders
   - player
   - checkpoint
-  - 
+  - platforms
   - 
   - 
   - 

@@ -23,6 +23,8 @@ public class player_controller : MonoBehaviour
 
     public bool MoveMade = false;
     bool onLadder = false;
+    public Vector2 MovePos; //(-1, 0), (0, 1) etc
+    
 
     // Start is called before the first frame update
     void Start()
@@ -149,21 +151,59 @@ public class player_controller : MonoBehaviour
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, move_direction_vector, wall_check_distance, what_is_wall);
         if (!hitInfo)
         {
+            MovePos = new Vector2(move_direction, 0);
             FindObjectOfType<AudioHandler>().PlaySound("Player", "walk");
             moved = true;
             onLadder = false;
             checkForCheckpoint(move_direction_vector);
-            transform.Translate(move_direction, 0, 0);
+        //    transform.Translate(move_direction, 0, 0);
+        //    int fallen_distance = 0;
+        //    while (fallen_distance < 20)
+        //    {
+        //        fallen_distance += 1;
+        //        RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
+        //        RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
+        //        if (!ground_info)
+        //        {
+        //            //checkForCheckpoint(Vector2.down);
+        //            transform.Translate(0, -move_distance, 0);
+        //            if (down_portal_info)
+        //            {
+        //                PortalSO portal1 = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
+        //                FindObjectOfType<Area>().OpenPortal(portal1);
+        //                break;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    if (fallen_distance >= 20)
+        //    {
+        //        Debug.Log("player fell of map or more than 20 blocks");
+        //        GetComponent<Player_health>().Die();
+        //    }
+        }
+        return moved;
+    }
+
+    public void move_player()
+    {
+        transform.Translate(MovePos);
+        //if jump, dont do groundcheck bool?
+        if(MovePos.y < 1)
+        {
             int fallen_distance = 0;
             while (fallen_distance < 20)
             {
-                fallen_distance += 1;   
-                RaycastHit2D ground_info = Physics2D.Raycast(transform.position , Vector2.down, wall_check_distance, what_is_wall);
+                fallen_distance += 1;
+                RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
                 RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
                 if (!ground_info)
                 {
                     //checkForCheckpoint(Vector2.down);
-                    transform.Translate(0, -move_distance, 0);                    
+                    transform.Translate(0, -move_distance, 0);
                     if (down_portal_info)
                     {
                         PortalSO portal1 = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
@@ -180,10 +220,10 @@ public class player_controller : MonoBehaviour
             {
                 Debug.Log("player fell of map or more than 20 blocks");
                 GetComponent<Player_health>().Die();
-            }           
-        }
-        return moved;
+            }
+        }  
     }
+
 
     public void checkForCheckpoint(Vector2 move_direction)
     {
@@ -191,7 +231,6 @@ public class player_controller : MonoBehaviour
         bool hitInfo = UtilityTilemap.CheckTileType("Portal", transform.position + new Vector3(move_distance, 0, 0), "checkpoint_1");
         if (hitInfo)
         {
-            Debug.Log("checkpoint function");
             //FindObjectOfType<Area>().SetCheckpoint(hitInfo.transform);   
             FindObjectOfType<Area>().SetCheckpoint(transform.position + new Vector3(move_distance, 0, 0));
         }
@@ -223,7 +262,8 @@ public class player_controller : MonoBehaviour
                 animator.SetBool("is climbing", true);
                 animator.SetBool("is attacking", false);
                 moved = true;
-                transform.Translate(0, move_distance, 0);
+                MovePos = new Vector2(0, move_distance);
+                //transform.Translate(0, move_distance, 0);
             }
            
         }     
@@ -236,7 +276,8 @@ public class player_controller : MonoBehaviour
                     FindObjectOfType<AudioHandler>().PlaySound("Player", "player_jump");
                     onLadder = false;
                     moved = true;
-                    transform.Translate(0, move_distance, 0);
+                    MovePos = new Vector2(0, move_distance);
+                    //transform.Translate(0, move_distance, 0);
                 }
             }
         }
@@ -280,7 +321,6 @@ public class player_controller : MonoBehaviour
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                    Debug.Log("enemy hit");
                     enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);
                 }
             }

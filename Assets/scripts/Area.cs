@@ -11,10 +11,15 @@ public class Area : MonoBehaviour
     private Vector2 current_checkpoint;
     private GameObject player;
 
+    public List<GameObject> SpawnObjects = new List<GameObject>();
+    public string[] SpawnObjectTags = {"Enemy", "moving_platform"};
+
     // Start is called before the first frame update
     void Start()
     {
         current_checkpoint = DefaultSpawnPoint.position;
+
+        //findSpawnObjects();
 
         if (TargetPortal)
         {
@@ -35,10 +40,49 @@ public class Area : MonoBehaviour
         }
     }
 
+    void findSpawnObjects()
+    {
+        foreach(string tag in SpawnObjectTags)
+        {
+            GameObject[] SpawnObjects = GameObject.FindGameObjectsWithTag(tag);
+            foreach(GameObject spawnObject in SpawnObjects)
+            {
+                SpawnObjects.Add(spawnObject); 
+            }
+        }
+        enemy_controller[] enemyObjects = FindObjectsOfType<enemy_controller>();
+        foreach(enemy_controller enemy in enemyObjects)
+        {
+            SpawnObjects.Add(enemy.gameObject);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        //if (SpawnObjects.Count <= 0) findSpawnObjects();
+    }
+
+
+    public void ScreenRangeChanged(camera_controller.ScreenRange newScreenRange)
+    {
+        if (SpawnObjects.Count <= 0)
+        {
+            findSpawnObjects();
+        } 
+        foreach(GameObject spawnObject in SpawnObjects)
+        {
+            if (!spawnObject) continue;
+            if(spawnObject.transform.position.x >= newScreenRange.lowerPoint.x && spawnObject.transform.position.x <= newScreenRange.upperPoint.x 
+                && spawnObject.transform.position.y >= newScreenRange.lowerPoint.y && spawnObject.transform.position.y <= newScreenRange.upperPoint.y)
+            {
+                spawnObject.SetActive(true);
+            }
+            else
+            {
+                spawnObject.SetActive(false);
+            }
+        }
     }
 
     public void OpenPortal(PortalSO portal)
@@ -58,7 +102,6 @@ public class Area : MonoBehaviour
     public void SetCheckpoint(Vector3 checkpointPos)
     {
         current_checkpoint = checkpointPos;
-        Debug.Log("checkpoint set" + checkpointPos);
     }
 
     public void RespawnPlayer()

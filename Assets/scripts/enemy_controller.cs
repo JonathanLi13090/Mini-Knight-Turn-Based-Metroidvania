@@ -43,7 +43,6 @@ public class enemy_controller : MonoBehaviour
             {
                 //transform.position += Vector3.left * move_distance;
                 transform.Translate(move_distance, 0, 0);
-                Debug.Log("right");
             }
             else
             {
@@ -56,7 +55,6 @@ public class enemy_controller : MonoBehaviour
             if (!hitInfo)
             {
                 transform.Translate(-move_distance, 0, 0);
-                Debug.Log("left");
             }
             else
             {

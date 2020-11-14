@@ -23,6 +23,15 @@ public class turn_controller : MonoBehaviour
         {
             move_for_turn();
             player.MoveMade = false;
+            player.move_player();
+        }
+    }
+
+    void move_for_turn_platforms()
+    {
+        foreach (GameObject game_objects in platforms)
+        {
+            game_objects.GetComponent<MovingPlatform>().move();
         }
     }
 
@@ -32,9 +41,6 @@ public class turn_controller : MonoBehaviour
         {
             game_objects.GetComponent<enemy_controller>().move(); 
         }
-        foreach (GameObject game_objects in platforms)
-        {
-            game_objects.GetComponent<MovingPlatform>().move();
-        }
+        
     }
 }

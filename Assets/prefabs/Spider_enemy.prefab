@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ec38a4312f998449b0937fab32c957a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  max_health: 2
+  max_health: 1
   knockback_distance: 1
   wall_check_distance: 1
   what_is_wall:

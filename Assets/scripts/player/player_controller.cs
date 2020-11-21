@@ -37,11 +37,32 @@ public class player_controller : MonoBehaviour
     {
         HandleInputs();
 
+        if(!MoveMade) HandleMove();
+
+        
+        
+    }
+
+    bool LeftArrow;
+    bool LeftArrowDown;
+    bool LeftArrowUp;
+    bool RightArrow;
+    bool RightArrowDown;
+    bool RightArrowUp;
+    bool JumpButton;
+    bool JumpButtonUp;
+    bool JumpButtonDown;
+    bool AttackButton;
+    bool AttackButtonUp;
+    bool AttackButtonDown;
+   
+    void HandleMove()
+    {
         if (Input.GetKeyDown(KeyCode.Space) && !onLadder)
         {
             Attack();
         }
-        else if(AttackButton && onLadder && (LeftArrowDown || RightArrowDown))
+        else if (AttackButton && onLadder && (LeftArrowDown || RightArrowDown))
         {
             if (LeftArrowDown && !facingLeft || RightArrowDown && facingLeft) Flip();
             Attack();
@@ -74,19 +95,6 @@ public class player_controller : MonoBehaviour
             }
         }
     }
-
-    bool LeftArrow;
-    bool LeftArrowDown;
-    bool LeftArrowUp;
-    bool RightArrow;
-    bool RightArrowDown;
-    bool RightArrowUp;
-    bool JumpButton;
-    bool JumpButtonUp;
-    bool JumpButtonDown;
-    bool AttackButton;
-    bool AttackButtonUp;
-    bool AttackButtonDown;
 
     void HandleInputs()
     {
@@ -188,7 +196,7 @@ public class player_controller : MonoBehaviour
         return moved;
     }
 
-    public void move_player()
+    public void Move()
     {
         transform.Translate(MovePos);
         //if jump, dont do groundcheck bool?
@@ -213,6 +221,7 @@ public class player_controller : MonoBehaviour
                 }
                 else
                 {
+                    //FindObjectOfType<AudioHandler>().PlaySound("Player", "fall_sound");
                     break;
                 }
             }
@@ -228,11 +237,12 @@ public class player_controller : MonoBehaviour
     public void checkForCheckpoint(Vector2 move_direction)
     {
         //RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, move_direction, move_distance, what_is_checkpoint);
-        bool hitInfo = UtilityTilemap.CheckTileType("Portal", transform.position + new Vector3(move_distance, 0, 0), "checkpoint_1");
+        bool hitInfo = UtilityTilemap.CheckTileType("Portal", transform.position + new Vector3(move_direction.x, 0, 0), "checkpoint_1");
         if (hitInfo)
         {
             //FindObjectOfType<Area>().SetCheckpoint(hitInfo.transform);   
             FindObjectOfType<Area>().SetCheckpoint(transform.position + new Vector3(move_distance, 0, 0));
+            FindObjectOfType<AudioHandler>().PlaySound("Player", "checkpoint_sound");
         }
     }
 
@@ -321,7 +331,7 @@ public class player_controller : MonoBehaviour
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);
+                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);  
                 }
             }
             attacked = true;

@@ -25,7 +25,7 @@ public class enemy_controller : MonoBehaviour
         
     }
 
-    public void move()
+    public void Move()
     {
         if (GetComponent<enemy_damage>().isDead) return;
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attack_point.position, attack_range, what_is_player);

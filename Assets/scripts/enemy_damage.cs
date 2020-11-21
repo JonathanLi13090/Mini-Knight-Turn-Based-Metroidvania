@@ -56,6 +56,7 @@ public class enemy_damage : MonoBehaviour
 
     void Die()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

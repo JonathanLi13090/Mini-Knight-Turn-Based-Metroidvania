@@ -25,7 +25,7 @@ public class MovingPlatform : MonoBehaviour
 
     }
 
-    public void move()
+    public void Move()
     {
         if (going_right == true)
         {

@@ -47,14 +47,14 @@ public class Area : MonoBehaviour
             GameObject[] SpawnObjects = GameObject.FindGameObjectsWithTag(tag);
             foreach(GameObject spawnObject in SpawnObjects)
             {
-                SpawnObjects.Add(spawnObject); 
+                this.SpawnObjects.Add(spawnObject); 
             }
         }
-        enemy_controller[] enemyObjects = FindObjectsOfType<enemy_controller>();
-        foreach(enemy_controller enemy in enemyObjects)
-        {
-            SpawnObjects.Add(enemy.gameObject);
-        }
+        //enemy_controller[] enemyObjects = FindObjectsOfType<enemy_controller>();
+        //foreach(enemy_controller enemy in enemyObjects)
+        //{
+        //    SpawnObjects.Add(enemy.gameObject);
+        //}
     }
 
     // Update is called once per frame

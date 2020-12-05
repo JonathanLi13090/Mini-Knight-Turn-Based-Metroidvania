@@ -22,17 +22,17 @@ public class enemy_damage : MonoBehaviour
         isDead = true;
     }
 
-    public void TakeDamage(int damage, int direction, bool die_after)
+    public void TakeDamage(int damage, int direction)
     {
         current_health -= damage;
 
-        if (current_health <= 0 && die_after)
-        {
-            self.GetComponent<enemy_controller>().Die_after = true;
-            Debug.Log("set die after true");
-        }
+        //if (current_health <= 0 && die_after)
+        //{
+        //    self.GetComponent<enemy_controller>().Die_after = true;
+        //    Debug.Log("set die after true");
+        //}
 
-        else if (current_health <= 0)
+        if (current_health <= 0)
         {
             Die();
         }

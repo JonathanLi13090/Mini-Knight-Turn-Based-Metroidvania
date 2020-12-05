@@ -257,10 +257,11 @@ public class player_controller : MonoBehaviour
                         foreach (Collider2D enemy in hitEnemies)
                         {
                             FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                            enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 3, true);
+                            enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 3);
                         }
                         initiate_shield_smash = false;
                         transform.Translate(0, 2 * move_distance, 0);
+                        break;
                     }
                     else
                     {
@@ -386,7 +387,7 @@ public class player_controller : MonoBehaviour
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection, false);  
+                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);  
                 }
             }
             attacked = true;
@@ -405,8 +406,19 @@ public class player_controller : MonoBehaviour
 [System.Serializable]
 public class PlayerAbilities
 {
-    public bool DoubleJump;
-    public bool Glide;
-    public bool ShieldSmash;
-    public bool UnderWaterBreathing;
+    public bool DoubleJump { get { return Debugging ? DebugDoubleJump : doubleJump; } set { doubleJump = value; DebugDoubleJump = value; } }
+    public bool Glide { get { return Debugging ? DebugGlide : glide; } set { glide = value; DebugGlide = value; } }
+    public bool ShieldSmash { get { return Debugging ? DebugShieldSmash : shieldSmash; } set { shieldSmash = value; DebugShieldSmash = value; } }
+    public bool UnderWaterBreathing { get { return Debugging ? DebugUnderWaterBreathing : underWaterBreathing; } set { underWaterBreathing = value; DebugUnderWaterBreathing = value; } }
+
+    private static bool doubleJump;
+    private static bool glide;
+    private static bool shieldSmash;
+    private static bool underWaterBreathing;
+
+    [SerializeField] bool Debugging;
+    [SerializeField] bool DebugDoubleJump;
+    [SerializeField] bool DebugGlide;
+    [SerializeField] bool DebugShieldSmash;
+    [SerializeField] bool DebugUnderWaterBreathing;
 }

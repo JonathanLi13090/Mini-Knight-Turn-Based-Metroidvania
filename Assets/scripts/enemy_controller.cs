@@ -31,11 +31,11 @@ public class enemy_controller : MonoBehaviour
     {
         if (GetComponent<enemy_damage>().isDead) return;
 
-        if (Die_after)
-        {
-            Debug.Log("die after move");
-            self.GetComponent<enemy_damage>().TakeDamage(1, 3, false);
-        }
+        //if (Die_after)
+        //{
+        //    Debug.Log("die after move");
+        //    self.GetComponent<enemy_damage>().TakeDamage(1, 3, false);
+        //}
 
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attack_point.position, attack_range, what_is_player);
         if(hitPlayer.Length > 0)

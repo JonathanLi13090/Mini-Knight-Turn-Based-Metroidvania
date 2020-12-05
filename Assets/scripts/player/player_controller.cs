@@ -5,6 +5,11 @@ using UnityEngine;
 public class player_controller : MonoBehaviour
 {
     public float wall_check_distance;
+    public float attackRange;
+    public int attack_damage;
+    public float move_distance;
+    public GameObject player;
+
     public Animator animator;
     public GameObject turn_controller;
     public LayerMask what_is_portals;
@@ -14,17 +19,28 @@ public class player_controller : MonoBehaviour
     public LayerMask what_is_checkpoint;
     public Transform attackPoint;
     public Transform down_attackPoint;
-    public float attackRange;
-    public int attack_damage;
-    public bool is_grounded;
-    public float move_distance;
+    //public bool is_grounded;
+    
     private bool facingLeft = true;
     public bool attacked;
 
     public bool MoveMade = false;
     bool onLadder = false;
     public Vector2 MovePos; //(-1, 0), (0, 1) etc
-    
+
+    public PlayerAbilities PA;
+
+    //Double Jump
+    public int MaxJumps = 2;
+    private int maxJumps { get { return PA.DoubleJump ? MaxJumps : 1; } }
+    private int jumpsRemaining;
+    private bool canJump { get { return jumpsRemaining > 0; } }
+
+    //Glide
+    [SerializeField] private bool gliding;
+
+    //Shield Smash
+    public bool initiate_shield_smash;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +52,8 @@ public class player_controller : MonoBehaviour
     void Update()
     {
         HandleInputs();
-
+        if (GLideButtonDown && PA.Glide) gliding = !gliding;
+        if (ShieldButtonDown && PA.ShieldSmash) initiate_shield_smash = !initiate_shield_smash;
         if(!MoveMade) HandleMove();
 
         
@@ -55,7 +72,13 @@ public class player_controller : MonoBehaviour
     bool AttackButton;
     bool AttackButtonUp;
     bool AttackButtonDown;
-   
+    bool GLideButton;
+    bool GLideButtonDown;
+    bool GLideButtonUp;
+    bool ShieldButton;
+    bool ShieldButtonDown;
+    bool ShieldButtonUp;
+
     void HandleMove()
     {
         if (Input.GetKeyDown(KeyCode.Space) && !onLadder)
@@ -116,6 +139,8 @@ public class player_controller : MonoBehaviour
         HandleInput(Input.GetKey(KeyCode.RightArrow), ref RightArrow, ref RightArrowUp, ref RightArrowDown);
         HandleInput(Input.GetKey(KeyCode.UpArrow), ref JumpButton, ref JumpButtonUp, ref JumpButtonDown);
         HandleInput(Input.GetKey(KeyCode.Space) || Input.GetAxisRaw("Jump") > 0.1f, ref AttackButton, ref AttackButtonUp, ref AttackButtonDown);
+        HandleInput(Input.GetKey(KeyCode.Z), ref GLideButton, ref GLideButtonUp, ref GLideButtonDown);
+        HandleInput(Input.GetKey(KeyCode.X), ref ShieldButton, ref ShieldButtonUp, ref ShieldButtonDown);
     }
 
     void HandleInput(bool input, ref bool button, ref bool up, ref bool down)
@@ -205,12 +230,17 @@ public class player_controller : MonoBehaviour
             int fallen_distance = 0;
             while (fallen_distance < 20)
             {
-                fallen_distance += 1;
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, what_is_enemy);
                 RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
                 RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
-                if (!ground_info)
+                fallen_distance += 1;
+                if (!ground_info && hitEnemies.Length < 1)
                 {
-                    //checkForCheckpoint(Vector2.down);
+                    //checkForCheckpoint(Vector2.down); 
+                    //check for enemy
+                    //if enemy, check if initialized shield smash
+                    //if yes, kill enemy bounce player
+                    //else, kill player
                     transform.Translate(0, -move_distance, 0);
                     if (down_portal_info)
                     {
@@ -218,10 +248,29 @@ public class player_controller : MonoBehaviour
                         FindObjectOfType<Area>().OpenPortal(portal1);
                         break;
                     }
+                    if (gliding) break;
+                }
+                else if (hitEnemies.Length > 0)
+                {
+                    if (initiate_shield_smash)
+                    {
+                        foreach (Collider2D enemy in hitEnemies)
+                        {
+                            FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
+                            enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 3, true);
+                        }
+                        initiate_shield_smash = false;
+                        transform.Translate(0, 2 * move_distance, 0);
+                    }
+                    else
+                    {
+                        player.GetComponent<Player_health>().take_damage(attack_damage);
+                    }
                 }
                 else
                 {
                     //FindObjectOfType<AudioHandler>().PlaySound("Player", "fall_sound");
+                    gliding = false;
                     break;
                 }
             }
@@ -279,10 +328,12 @@ public class player_controller : MonoBehaviour
         }     
         else
         {
-            if (groundInfo)
+            if (groundInfo || canJump)
             {
+                if (groundInfo) jumpsRemaining = maxJumps;
                 if (!hitInfo)
                 {
+                    jumpsRemaining -= 1;
                     FindObjectOfType<AudioHandler>().PlaySound("Player", "player_jump");
                     onLadder = false;
                     moved = true;
@@ -296,6 +347,10 @@ public class player_controller : MonoBehaviour
 
     bool Down()
     {
+        //make move pos and set to move()
+        //can't move down on ladder
+        //if gliding toward direction, press down = two blocks down and 1 towards direction(will go in ground)
+
         bool moved = false;
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_ladder);
         RaycastHit2D groundInfo = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
@@ -331,7 +386,7 @@ public class player_controller : MonoBehaviour
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);  
+                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection, false);  
                 }
             }
             attacked = true;
@@ -345,4 +400,13 @@ public class player_controller : MonoBehaviour
         Scaler.x *= -1;
         transform.localScale = Scaler;
     }
+}
+
+[System.Serializable]
+public class PlayerAbilities
+{
+    public bool DoubleJump;
+    public bool Glide;
+    public bool ShieldSmash;
+    public bool UnderWaterBreathing;
 }

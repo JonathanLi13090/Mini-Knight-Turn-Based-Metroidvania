@@ -8,6 +8,7 @@ public class turn_controller : MonoBehaviour
     public GameObject[] moveable_enemies;
     public player_controller player;
     private List<GameObject> turn_queue = new List<GameObject>();
+    public bool queue_empty;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,10 @@ public class turn_controller : MonoBehaviour
         moveable_enemies = GameObject.FindGameObjectsWithTag("Enemy");
         platforms = GameObject.FindGameObjectsWithTag("moving_platform");
         if (!player) player = FindObjectOfType<player_controller>();
+        if(turn_queue.Count <= 0)
+        {
+            queue_empty = true;
+        }
         if (player.MoveMade && turn_queue.Count <= 0)
         {
             move_for_turn_platforms();

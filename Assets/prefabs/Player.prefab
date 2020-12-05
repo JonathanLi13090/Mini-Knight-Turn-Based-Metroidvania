@@ -130,6 +130,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wall_check_distance: 1
+  attackRange: 0.2
+  attack_damage: 1
+  move_distance: 1
+  player: {fileID: 8778468296454887158}
   animator: {fileID: 484934119}
   turn_controller: {fileID: 6002389705066841657, guid: 7b8a192adc7c08741b2cf02a6af1dbbb,
     type: 3}
@@ -150,12 +154,17 @@ MonoBehaviour:
     m_Bits: 8192
   attackPoint: {fileID: 3495237956823175045}
   down_attackPoint: {fileID: 0}
-  attackRange: 0.5
-  attack_damage: 1
-  is_grounded: 0
-  move_distance: 1
   attacked: 0
   MoveMade: 0
+  MovePos: {x: 0, y: 0}
+  PA:
+    DoubleJump: 0
+    Glide: 0
+    ShieldSmash: 0
+    UnderWaterBreathing: 0
+  MaxJumps: 2
+  gliding: 0
+  initiate_shield_smash: 0
 --- !u!114 &986207101617225131
 MonoBehaviour:
   m_ObjectHideFlags: 0

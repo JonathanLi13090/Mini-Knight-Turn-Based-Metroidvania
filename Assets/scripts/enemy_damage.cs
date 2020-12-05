@@ -5,6 +5,7 @@ using UnityEngine;
 public class enemy_damage : MonoBehaviour
 {
     public int max_health;
+    public GameObject self;
     private int current_health;
     public int knockback_distance = 1;
     public float wall_check_distance = 1f;
@@ -21,14 +22,21 @@ public class enemy_damage : MonoBehaviour
         isDead = true;
     }
 
-    public void TakeDamage(int damage, int direction)
+    public void TakeDamage(int damage, int direction, bool die_after)
     {
         current_health -= damage;
 
-        if (current_health <= 0)
+        if (current_health <= 0 && die_after)
+        {
+            self.GetComponent<enemy_controller>().Die_after = true;
+            Debug.Log("set die after true");
+        }
+
+        else if (current_health <= 0)
         {
             Die();
         }
+
         else
         {
             if (direction == 1)

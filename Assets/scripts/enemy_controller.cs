@@ -6,12 +6,14 @@ public class enemy_controller : MonoBehaviour
 {
     public float wall_check_distance;
     public float move_distance;
+    public GameObject self;
     public LayerMask what_is_wall;
     public LayerMask what_is_player;
     public float attack_range;
     public bool going_right = true;
     public Transform attack_point;
     public int attack_damage;
+    public bool Die_after;
 
     // Start is called before the first frame update
     public void Start()
@@ -28,6 +30,13 @@ public class enemy_controller : MonoBehaviour
     public void Move()
     {
         if (GetComponent<enemy_damage>().isDead) return;
+
+        if (Die_after)
+        {
+            Debug.Log("die after move");
+            self.GetComponent<enemy_damage>().TakeDamage(1, 3, false);
+        }
+
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attack_point.position, attack_range, what_is_player);
         if(hitPlayer.Length > 0)
         {
@@ -61,6 +70,7 @@ public class enemy_controller : MonoBehaviour
                 Flip();
             }
         }
+        
     }
 
     void Flip()

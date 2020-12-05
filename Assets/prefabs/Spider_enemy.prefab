@@ -99,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wall_check_distance: 1
   move_distance: 1
+  self: {fileID: 4537348947850412601}
   what_is_wall:
     serializedVersion: 2
     m_Bits: 256
@@ -109,6 +110,7 @@ MonoBehaviour:
   going_right: 0
   attack_point: {fileID: 4918339693078821130}
   attack_damage: 1
+  Die_after: 0
 --- !u!114 &3455536297551519186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,6 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max_health: 1
+  self: {fileID: 4537348947850412601}
   knockback_distance: 1
   wall_check_distance: 1
   what_is_wall:

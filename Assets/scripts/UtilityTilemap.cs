@@ -11,6 +11,11 @@ public static class UtilityTilemap
         return tilemap.GetTile(tilePos);
     }
 
+    public static Vector3Int GetGridPos(Tilemap tilemap, Vector2 worldPos)
+    {
+        return tilemap.WorldToCell(worldPos);
+    }
+
     public static bool CheckTileType(Tilemap tilemap, Vector2 worldPos, string tileType)
     {
         TileBase tileBase = GetTile(tilemap, worldPos);

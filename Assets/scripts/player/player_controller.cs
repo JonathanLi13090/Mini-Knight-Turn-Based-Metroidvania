@@ -6,6 +6,7 @@ public class player_controller : MonoBehaviour
 {
     public float wall_check_distance;
     public float attackRange;
+    public float enemyRange;
     public int attack_damage;
     public float move_distance;
     public GameObject player;
@@ -225,12 +226,12 @@ public class player_controller : MonoBehaviour
     {
         transform.Translate(MovePos);
         //if jump, dont do groundcheck bool?
-        if(MovePos.y < 1)
+        if(MovePos.y < 1 && MovePos.y > -1)
         {
             int fallen_distance = 0;
             while (fallen_distance < 20)
             {
-                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, what_is_enemy);
+                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, enemyRange, what_is_enemy);
                 RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
                 RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
                 fallen_distance += 1;
@@ -257,10 +258,11 @@ public class player_controller : MonoBehaviour
                         foreach (Collider2D enemy in hitEnemies)
                         {
                             FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                            enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 3, true);
+                            enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 3);
                         }
                         initiate_shield_smash = false;
                         transform.Translate(0, 2 * move_distance, 0);
+                        break;
                     }
                     else
                     {
@@ -361,7 +363,8 @@ public class player_controller : MonoBehaviour
                 onLadder = true;
                 moved = true;
                 checkForCheckpoint(Vector2.down);
-                transform.Translate(0, -move_distance, 0);
+                MovePos = new Vector2(0, -move_distance);
+                //transform.Translate(0, -move_distance, 0);
             }
         }
         else
@@ -386,7 +389,8 @@ public class player_controller : MonoBehaviour
                 foreach (Collider2D enemy in hitEnemies)
                 {
                     FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                    enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection, false);  
+                    if (enemy.GetComponent<enemy_damage>()) enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, kickDirection);
+                    else if (enemy.gameObject.GetComponent<Boss_script>()) enemy.GetComponent<Boss_script>().TakeDamage(attack_damage);
                 }
             }
             attacked = true;
@@ -405,8 +409,19 @@ public class player_controller : MonoBehaviour
 [System.Serializable]
 public class PlayerAbilities
 {
-    public bool DoubleJump;
-    public bool Glide;
-    public bool ShieldSmash;
-    public bool UnderWaterBreathing;
+    public bool DoubleJump { get { return Debugging ? DebugDoubleJump : doubleJump; } set { doubleJump = value; DebugDoubleJump = value; } }
+    public bool Glide { get { return Debugging ? DebugGlide : glide; } set { glide = value; DebugGlide = value; } }
+    public bool ShieldSmash { get { return Debugging ? DebugShieldSmash : shieldSmash; } set { shieldSmash = value; DebugShieldSmash = value; } }
+    public bool UnderWaterBreathing { get { return Debugging ? DebugUnderwaterBreathing : underWaterBreathing; } set { underWaterBreathing = value; DebugUnderwaterBreathing = value; } }
+
+    private static bool doubleJump;
+    private static bool glide;
+    private static bool shieldSmash;
+    private static bool underWaterBreathing;
+
+    [SerializeField] bool Debugging;
+    [SerializeField] bool DebugDoubleJump;
+    [SerializeField] bool DebugGlide;
+    [SerializeField] bool DebugShieldSmash;
+    [SerializeField] bool DebugUnderwaterBreathing;
 }

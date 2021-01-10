@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class enemy_controller : MonoBehaviour
 {
     public float wall_check_distance;
@@ -26,7 +27,8 @@ public class enemy_controller : MonoBehaviour
     {
         
     }
-
+    public UnityEngine.Tilemaps.Tilemap groundTileMap;
+    public Transform Player;
     public void Move()
     {
         if (GetComponent<enemy_damage>().isDead) return;
@@ -36,6 +38,10 @@ public class enemy_controller : MonoBehaviour
         //    Debug.Log("die after move");
         //    self.GetComponent<enemy_damage>().TakeDamage(1, 3, false);
         //}
+
+        List<Node> path = FindPath.FindEnemyPath(groundTileMap, transform.position, GameObject.FindGameObjectWithTag("player").transform.position);
+        Vector2 moveDirection = path[path.Count - 1].pos - (Vector2Int) UtilityTilemap.GetGridPos(groundTileMap, transform.position);
+        //returns list of nodes, last node is destination
 
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attack_point.position, attack_range, what_is_player);
         if(hitPlayer.Length > 0)

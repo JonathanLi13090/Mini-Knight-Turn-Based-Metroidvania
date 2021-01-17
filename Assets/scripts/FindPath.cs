@@ -82,7 +82,7 @@ public class FindPath
                 path.Add(endNode);
                 endNode = endNode.previous;
             } while (endNode != startNode);
-            Debug.Log(pathStr);
+            //Debug.Log(pathStr);
         }
         return path;
     }

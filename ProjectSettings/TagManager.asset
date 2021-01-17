@@ -9,6 +9,7 @@ TagManager:
   - Portal
   - Enemy
   - moving_platform
+  - ground
   layers:
   - Default
   - TransparentFX

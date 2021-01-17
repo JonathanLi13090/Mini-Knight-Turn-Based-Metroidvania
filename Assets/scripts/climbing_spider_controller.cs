@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class enemy_controller : MonoBehaviour
+public class climbing_spider_controller : MonoBehaviour
 {
     public float wall_check_distance;
     public float move_distance;
@@ -11,7 +10,7 @@ public class enemy_controller : MonoBehaviour
     public LayerMask what_is_wall;
     public LayerMask what_is_player;
     public float attack_range;
-    public bool going_right = true;
+    public bool going_up = true;
     public Transform attack_point;
     public int attack_damage;
     public bool Die_after;
@@ -25,65 +24,59 @@ public class enemy_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     public UnityEngine.Tilemaps.Tilemap groundTileMap;
     public Transform Player;
+
     public void Move()
     {
         if (GetComponent<enemy_damage>().isDead) return;
 
-        //if (Die_after)
-        //{
-        //    Debug.Log("die after move");
-        //    self.GetComponent<enemy_damage>().TakeDamage(1, 3, false);
-        //}
-
         List<Node> path = FindPath.FindEnemyPath(groundTileMap, transform.position, GameObject.FindGameObjectWithTag("player").transform.position);
-        Vector2 moveDirection = path[path.Count - 1].pos - (Vector2Int) UtilityTilemap.GetGridPos(groundTileMap, transform.position);
+        Vector2 moveDirection = path[path.Count - 1].pos - (Vector2Int)UtilityTilemap.GetGridPos(groundTileMap, transform.position);
         //returns list of nodes, last node is destination
 
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attack_point.position, attack_range, what_is_player);
-        if(hitPlayer.Length > 0)
+        if (hitPlayer.Length > 0)
         {
             foreach (Collider2D player in hitPlayer)
             {
                 player.GetComponent<Player_health>().take_damage(attack_damage);
             }
         }
-        if (going_right == true)
+        if (going_up == true)
         {
-            RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.right, wall_check_distance, what_is_wall);
+            RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.up, wall_check_distance, what_is_wall);
             if (!hitInfo)
             {
-                //transform.position += Vector3.left * move_distance;
-                transform.Translate(move_distance, 0, 0);
+                transform.Translate(0, move_distance, 0);
             }
             else
             {
                 Flip();
             }
         }
-        else if(going_right == false)
+        else if (going_up == false)
         {
-            RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.left, wall_check_distance, what_is_wall);
+            RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
             if (!hitInfo)
             {
-                transform.Translate(-move_distance, 0, 0);
+                transform.Translate(0, -move_distance, 0);
             }
             else
             {
                 Flip();
             }
         }
-        
+
     }
 
     void Flip()
     {
-        going_right = !going_right;
+        going_up = !going_up;
         Vector2 Scaler = transform.localScale;
-        Scaler.x *= -1;
+        Scaler.y *= -1;
         transform.localScale = Scaler;
     }
 }

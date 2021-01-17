@@ -36,7 +36,7 @@ public class turn_controller : MonoBehaviour
 
         if(turn_queue.Count > 0)
         {
-            if (turn_queue[0])
+            if (turn_queue[0] && turn_queue[0].activeSelf)  
             {
                 turn_queue[0].SendMessage("Move");
             }              

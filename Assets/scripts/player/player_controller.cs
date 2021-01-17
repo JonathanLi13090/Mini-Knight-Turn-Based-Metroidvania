@@ -56,9 +56,6 @@ public class player_controller : MonoBehaviour
         if (GLideButtonDown && PA.Glide) gliding = !gliding;
         if (ShieldButtonDown && PA.ShieldSmash) initiate_shield_smash = !initiate_shield_smash;
         if(!MoveMade) HandleMove();
-
-        
-        
     }
 
     bool LeftArrow;
@@ -226,73 +223,78 @@ public class player_controller : MonoBehaviour
     {
         transform.Translate(MovePos);
         //if jump, dont do groundcheck bool?
-        if(MovePos.y < 1 && MovePos.y > -1)
+        RaycastHit2D ladder_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_ladder);
+        if (!ladder_info)
         {
-            int fallen_distance = 0;
-            while (fallen_distance < 20)
+            if (MovePos.y < 1 && MovePos.y > -1)
             {
-                Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, enemyRange, what_is_enemy);
-                RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
-                RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
-                fallen_distance += 1;
-                if (!ground_info && hitEnemies.Length < 1)
+                int fallen_distance = 0;
+                while (fallen_distance < 20)
                 {
-                    //checkForCheckpoint(Vector2.down); 
-                    //check for enemy
-                    //if enemy, check if initialized shield smash
-                    //if yes, kill enemy bounce player
-                    //else, kill player
-                    transform.Translate(0, -move_distance, 0);
-                    if (down_portal_info)
+                    Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, enemyRange, what_is_enemy);
+                    RaycastHit2D ground_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_wall);
+                    RaycastHit2D down_portal_info = Physics2D.Raycast(transform.position, Vector2.down, wall_check_distance, what_is_portals);
+                    fallen_distance += 1;
+                    if (!ground_info && hitEnemies.Length < 1)
                     {
-                        PortalSO portal1 = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
-                        FindObjectOfType<Area>().OpenPortal(portal1);
-                        break;
-                    }
-                    if (gliding) break;
-                }
-                else if (hitEnemies.Length > 0)
-                {
-                    if (initiate_shield_smash)
-                    {
-                        foreach (Collider2D enemy in hitEnemies)
+                        //checkForCheckpoint(Vector2.down); 
+                        //check for enemy
+                        //if enemy, check if initialized shield smash
+                        //if yes, kill enemy bounce player
+                        //else, kill player
+                        transform.Translate(0, -move_distance, 0);
+                        if (down_portal_info)
                         {
-                            FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
-                            enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 3);
+                            PortalSO portal1 = down_portal_info.transform.GetComponent<Portal>().MyPortalSO;
+                            FindObjectOfType<Area>().OpenPortal(portal1);
+                            break;
                         }
-                        initiate_shield_smash = false;
-                        transform.Translate(0, 2 * move_distance, 0);
-                        break;
+                        if (gliding) break;
+                    }
+                    else if (hitEnemies.Length > 0)
+                    {
+                        if (initiate_shield_smash)
+                        {
+                            foreach (Collider2D enemy in hitEnemies)
+                            {
+                                FindObjectOfType<AudioHandler>().PlaySound("Player", "enemy_hurt");
+                                enemy.GetComponent<enemy_damage>().TakeDamage(attack_damage, 3);
+                            }
+                            initiate_shield_smash = false;
+                            transform.Translate(0, 2 * move_distance, 0);
+                            break;
+                        }
+                        else
+                        {
+                            player.GetComponent<Player_health>().take_damage(attack_damage);
+                        }
                     }
                     else
                     {
-                        player.GetComponent<Player_health>().take_damage(attack_damage);
+                        //FindObjectOfType<AudioHandler>().PlaySound("Player", "fall_sound");
+                        gliding = false;
+                        break;
                     }
                 }
-                else
+                if (fallen_distance >= 20)
                 {
-                    //FindObjectOfType<AudioHandler>().PlaySound("Player", "fall_sound");
-                    gliding = false;
-                    break;
+                    Debug.Log("player fell of map or more than 20 blocks");
+                    GetComponent<Player_health>().Die();
                 }
             }
-            if (fallen_distance >= 20)
-            {
-                Debug.Log("player fell of map or more than 20 blocks");
-                GetComponent<Player_health>().Die();
-            }
-        }  
+        }
     }
 
 
     public void checkForCheckpoint(Vector2 move_direction)
     {
         //RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, move_direction, move_distance, what_is_checkpoint);
+        //bool hitInfo = UtilityTilemap.CheckTileType("Portal", transform.position + new Vector3(move_direction.x, 0, 0), "checkpoint_1");
         bool hitInfo = UtilityTilemap.CheckTileType("Portal", transform.position + new Vector3(move_direction.x, 0, 0), "checkpoint_1");
         if (hitInfo)
         {
             //FindObjectOfType<Area>().SetCheckpoint(hitInfo.transform);   
-            FindObjectOfType<Area>().SetCheckpoint(transform.position + new Vector3(move_distance, 0, 0));
+            FindObjectOfType<Area>().SetCheckpoint(transform.position + new Vector3(move_direction.x, 0, 0));
             FindObjectOfType<AudioHandler>().PlaySound("Player", "checkpoint_sound");
         }
     }
